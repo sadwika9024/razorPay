@@ -2,12 +2,18 @@ package com.pabbasadwika.razorPay.merchant.entity;
 
 import com.pabbasadwika.razorPay.common.enums.Environment;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "api_key")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ApiKey {
 
     @Id
@@ -27,6 +33,7 @@ public class ApiKey {
     @Column(length = 50,nullable = false)
     private Environment environment;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean enabled = true;
 

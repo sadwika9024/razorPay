@@ -1,0 +1,59 @@
+package com.pabbasadwika.razorPay.operations.entity;
+
+import com.pabbasadwika.razorPay.common.enums.WebhookEventState;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
+
+@Entity
+@Table(name = "webhook_events")
+public class WebhookEvents {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "merchant_id")
+    private UUID merchantId;
+
+    @Column(nullable = false,length = 100)
+    private String eventType;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String,Object> payload;
+
+
+    @Column(nullable = false,length = 50)
+    private String targetUrl;
+
+    @Column(nullable = false)
+    private String signature;
+
+    @Column(name = "status",nullable = false)
+    @Enumerated(EnumType.STRING)
+    private WebhookEventState status;
+
+    @Column(nullable = false)
+    private Integer attempts = 0;
+
+    @Column(nullable = false)
+    private Integer lastResponseCode;
+
+    @Column(length = 1000)
+    private String lastResponseBody;
+
+    private LocalDateTime nextRetryAt;
+
+    private LocalDateTime lastAttemptAt;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime delieveredAt;
+
+}
