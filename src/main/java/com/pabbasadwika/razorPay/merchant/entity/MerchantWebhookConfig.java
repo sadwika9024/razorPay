@@ -1,11 +1,17 @@
 package com.pabbasadwika.razorPay.merchant.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "merchant_webhook_config")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 //when ever something happens on razorpay side I want to know what happens and we want to listen to those events
 public class MerchantWebhookConfig {
 
