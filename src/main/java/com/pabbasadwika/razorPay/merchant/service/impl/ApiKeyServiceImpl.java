@@ -87,10 +87,14 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     @Override
     @Transactional
     public ApiKeyCreateResponse rotateKey(UUID merchantId, UUID keyId) {
+
+        //we need to find if the keyId with the same merchant is available or not
         ApiKey apiKey = apiKeyRepository.findById(keyId)
                 .filter(k -> k.getMerchant().getId().equals(merchantId))
                 .orElseThrow(()-> new ResourceNotFound("ApiKey",keyId));
 
+
+        //create a new password or secret , set the current in previous and new one in present
 
         String newRawSecret = RandomizerUtil.randomBase64(40);//TODO : replace with cryptographic random hex
         apiKey.setPreviousKeySecretHash(apiKey.getKeySecretHash());

@@ -3,6 +3,7 @@ package com.pabbasadwika.razorPay.payment.entity;
 import com.pabbasadwika.razorPay.common.entity.Money;
 import com.pabbasadwika.razorPay.common.enums.OrderStatus;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -13,6 +14,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "order_record")
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OrderRecord {
 
     @Id
@@ -25,11 +31,16 @@ public class OrderRecord {
     @Embedded
     private Money amount;
 
+    @Column(length = 100)
+    private String receipt;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 50,nullable = false)
     private OrderStatus orderStatus = OrderStatus.CREATED;
 
     @Column(nullable = false)
+    @Builder.Default
+    //if we dont add @Builder.Default it wont take it as zero it expects value from request
     private Integer attempts=0;
 
     //key value pair that a merchant can store,nested json

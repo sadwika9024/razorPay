@@ -1,10 +1,15 @@
 package com.pabbasadwika.razorPay.common.entity;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 //embeddable -- a class that can be used in different tables
 @Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Money {
     private Integer amountUnits; // Amount in smallest currency unit (e.g., cents)
     private String currency; // ISO 4217 currency code (e.g., "USD", "INR")
@@ -13,10 +18,10 @@ public class Money {
         return new Money(amountUnits, currency);
     }
 
-    public Money(Integer amountUnits, String currency) {
-        this.amountUnits = amountUnits;
-        this.currency = currency;
-    }
+//    public Money(Integer amountUnits, String currency) {
+//        this.amountUnits = amountUnits;
+//        this.currency = currency;
+//    }
 
     private static Money inr(Integer amountUnits){
         return new Money(amountUnits, "INR");
