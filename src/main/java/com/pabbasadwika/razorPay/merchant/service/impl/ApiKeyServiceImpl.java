@@ -93,6 +93,9 @@ public class ApiKeyServiceImpl implements ApiKeyService {
                 .filter(k -> k.getMerchant().getId().equals(merchantId))
                 .orElseThrow(()-> new ResourceNotFound("ApiKey",keyId));
 
+        //🤯 if key is disabled we should not retate
+        if(!apiKey.isEnabled())
+            throw new RuntimeException("Cannot rotate a disabled key");
 
         //create a new password or secret , set the current in previous and new one in present
 
