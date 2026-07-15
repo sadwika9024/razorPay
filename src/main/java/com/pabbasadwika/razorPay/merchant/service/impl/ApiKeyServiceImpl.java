@@ -7,6 +7,8 @@ import com.pabbasadwika.razorPay.merchant.dto.request.CreateApiKeyRequest;
 import com.pabbasadwika.razorPay.merchant.dto.response.ApiKeyResponse;
 import com.pabbasadwika.razorPay.merchant.entity.ApiKey;
 import com.pabbasadwika.razorPay.merchant.entity.Merchant;
+import com.pabbasadwika.razorPay.merchant.mapper.ApiKeyMapper;
+import com.pabbasadwika.razorPay.merchant.mapper.MerchantMapper;
 import com.pabbasadwika.razorPay.merchant.repository.ApiKeyRepository;
 import com.pabbasadwika.razorPay.merchant.repository.MerchantRepository;
 import com.pabbasadwika.razorPay.merchant.service.ApiKeyService;
@@ -28,6 +30,8 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     private final MerchantRepository merchantRepository;
 
     private final ApiKeyRepository apiKeyRepository;
+    private final ApiKeyMapper apiKeyMapper;
+
     /* what is an apikey -- to communicate between merchant to razorpay
     to connect :  its simple username is keyId and password is keysecret*/
     @Override
@@ -57,16 +61,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
     @Override
     public List<ApiKeyResponse> list(UUID merchantID) {
-        return apiKeyRepository.findByMerchant_Id(merchantID)
-                .stream()
-                .map(apiKey -> new ApiKeyResponse(
-                        apiKey.getId(),
-                        apiKey.getKeyId(),
-                        apiKey.getEnvironment(),
-                        apiKey.isEnabled(),
-                        apiKey.getLastUsedAt(),
-                        null))
-                .toList();
+        return apiKeyMapper.toListOfApiKeyResponse(apiKeyRepository.findByMerchant_Id(merchantID));
     }
 
     //revoke means deleting -- if enabled as false means deleting..

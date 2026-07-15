@@ -7,6 +7,7 @@ import com.pabbasadwika.razorPay.merchant.dto.request.MerchantSignupRequest;
 import com.pabbasadwika.razorPay.merchant.dto.response.MerchantResponse;
 import com.pabbasadwika.razorPay.merchant.entity.AppUser;
 import com.pabbasadwika.razorPay.merchant.entity.Merchant;
+import com.pabbasadwika.razorPay.merchant.mapper.MerchantMapper;
 import com.pabbasadwika.razorPay.merchant.repository.AppUserRepository;
 import com.pabbasadwika.razorPay.merchant.repository.MerchantRepository;
 import com.pabbasadwika.razorPay.merchant.service.AuthService;
@@ -22,6 +23,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final AppUserRepository appUserRepository;
     private final MerchantRepository merchantRepository;
+    private final MerchantMapper merchantMapper;
+
 
     @Override
     @Transactional
@@ -29,13 +32,9 @@ public class AuthServiceImpl implements AuthService {
         if(merchantRepository.existsByEmail(request.email())){
             throw new DuplicateResourceException("DUPLICATE_MERCHANT_EMAIL","emailID already exist : "+request.email());
         }
-        Merchant merchant = Merchant.builder()
-                .name(request.name())
-                .email(request.email())
-                .businessType(request.businessType())
-                .businessName(request.businessName())
-                .status(MerchantStatus.PENDING_KYC)
-                .build();
+        Merchant merchant = merchantMapper.toEntityFromSignUpRequest(request);
+        merchant.setStatus(MerchantStatus.PENDING_KYC);
+
         merchant = merchantRepository.save(merchant);
 
         AppUser appUser = AppUser.builder()
@@ -47,13 +46,6 @@ public class AuthServiceImpl implements AuthService {
 
         appUserRepository.save(appUser);
 
-        return new MerchantResponse(
-                merchant.getId(),
-                merchant.getName(),
-                merchant.getEmail(),
-                merchant.getBusinessName(),
-                merchant.getBusinessType(),
-                merchant.getStatus()
-        );
+        return merchantMapper.toMerchantResponse(merchant);
     }
 }
